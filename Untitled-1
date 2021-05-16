@@ -1,0 +1,167 @@
+/***********************************************************
+ * Property off: www.microcontroller-project.com           *
+ * Author      : Usman Ali Butt                            *
+ * Date        : October 2015                              *
+ ***********************************************************/
+
+#include <ESP8266WiFi.h>
+#include <WiFiClient.h> 
+#include <ESP8266WebServer.h>
+#include <EEPROM.h>
+
+const char *ssid = "Metro";            //Ap SSID
+const char *password = "1234";     //Ap Password
+String Essid = "";                  //EEPROM Network SSID
+String Epass = "";                 //EEPROM Network Password
+String sssid = "";                  //Read SSID From Web Page
+String passs = "";                 //Read Password From Web Page
+const char* Tserver = "api.thingspeak.com";           //ThingSpeak Server
+String apiKey = "Enter-Yours";             //ThingSpeak Account API
+  
+ESP8266WebServer server(80);                           //Specify port 
+WiFiClient client;
+
+
+void setup() {
+  delay(200);                            //Stable Wifi
+  Serial.begin(115200);             //Set Baud Rate 
+  EEPROM.begin(512);
+  Serial.println("Configuring access point...");
+  WiFi.mode(WIFI_AP_STA);           //Both in Station and Access Point Mode
+  pinMode(0,INPUT);                      //Go to AP Mode Button
+  pinMode(2,INPUT);                      //Go to Sta Mode Button
+  /* You can remove the password parameter if you want the AP to be open. */
+  
+////////////////////////////Reading EEProm SSID-Password//////////////////////////////////////////////
+  for (int i = 0; i < 32; ++i)                               //Reading SSID
+    {
+      Essid += char(EEPROM.read(i)); 
+    }
+  for (int i = 32; i < 96; ++i)                            //Reading Password
+    {
+      Epass += char(EEPROM.read(i)); 
+    }
+  if ( Essid.length() > 1 ) {  
+    Serial.println(Essid);                             //Print SSID
+    Serial.println(Epass);                            //Print Password
+      WiFi.begin(Essid.c_str(), Epass.c_str());   //c_str()
+      delay(5000);                                     //Wait for IP to be assigned to Module by Router
+      IPAddress ip = WiFi.localIP();           //Get ESP8266 IP Adress
+      Serial.print("IP=");
+      Serial.print(ip);             //Print Ip on serial monitor or any serial debugger
+  }
+ 
+//////////////////////////////Reading EEProm SSID-Password/////////////////////////////////////////// 
+}
+
+ 
+ ///////////////////////////////////////////If IP is Hitted in Browser///////////////////////////////
+void D_AP_SER_Page() {
+  int Tnetwork=0,i=0,len=0;
+  String st="",s="";                    //String array to store the SSID's of available networks
+  Tnetwork = WiFi.scanNetworks();       //Scan for total networks available
+  st = "<ul>";
+  for (int i = 0; i < Tnetwork; ++i)
+    {
+      // Print SSID and RSSI for each network found
+      st += "<li>";
+      st +=i + 1;
+      st += ": ";
+      st += WiFi.SSID(i);
+      st += " (";
+      st += WiFi.RSSI(i);
+      st += ")";
+      st += (WiFi.encryptionType(i) == ENC_TYPE_NONE)?" ":"*";
+      st += "</li>";
+    }
+    st += "</ul>";
+
+    IPAddress ip = WiFi.softAPIP();                  //Get ESP8266 IP Adress
+        //String ipStr = String(ip[0]) + '.' + String(ip[1]) + '.' + String(ip[2]) + '.' + String(ip[3]);
+        s = "\n\r\n<!DOCTYPE HTML>\r\n<html><h1> Metro Store</h1> ";
+        //s += ipStr;
+        s += "<p>";
+        s += st;
+        s += "<form method='get' action='a'><label>SSID: </label><input name='ssid' length=32><label>Paswoord: </label><input name='pass' length=64><input type='submit'></form>";
+        s += "</html>\r\n\r\n";
+      
+    server.send( 200 , "text/html", s);
+}
+///////////////////////////////////////////If IP is Hitted in Browser/////////////////////////////////
+
+///////////////////////////////////////////Get SSID & Password////////////////////////////////////////
+void Get_Req(){
+  
+  if (server.hasArg("ssid") && server.hasArg("pass")){  
+   sssid=server.arg("ssid");//Get SSID
+   passs=server.arg("pass");//Get Password
+  }
+
+  if(sssid.length()>1 && passs.length()>1){
+     ClearEeprom();//First Clear Eeprom
+     delay(10);
+     for (int i = 0; i < sssid.length(); ++i)
+          {
+            EEPROM.write(i, sssid[i]);
+          }
+        
+     for (int i = 0; i < passs.length(); ++i)
+          {
+            EEPROM.write(32+i, passs[i]);
+          }    
+     EEPROM.commit();
+        
+        String s = "\r\n\r\n<!DOCTYPE HTML>\r\n<html><h1>Metro Store</h1> ";
+        s += "<p>Password Saved... Reset to boot into new wifi</html>\r\n\r\n";
+        server.send(200,"text/html",s);
+      }
+      
+    }
+////////////////////////////////////// Get SSID & Password//////////////////////////
+
+
+//////////////////////////////////////Clear Eeprom/////////////////////////////////
+void ClearEeprom(){
+        Serial.println("Clearing Eeprom");
+        for (int i = 0; i < 96; ++i) { EEPROM.write(i, 0); }
+  }
+//////////////////////////////////////Clear Eeprom/////////////////////////////////
+
+void loop() {
+
+if(digitalRead(0)==LOW)                     //If button 0 is pressed
+  {
+  WiFi.softAP(ssid, password);  //Access Point Mode SSID and Password-Provided hard coded in the code
+  delay(10);                    //Stable AP
+  server.on("/",D_AP_SER_Page);     //if
+  //If submit button is pressed get the new SSID and Password and store it in EEPROM 
+  server.on("/a",Get_Req); 
+  Serial.print("In Ap Mode");
+  server.begin();  
+  delay(300); 
+  }
+  server.handleClient();     
+
+if(digitalRead(2)==LOW){                //If button 1 is pressed
+  
+  while(!client.connect(Tserver,80));   //Connect to ThingSpeak Server
+     Serial.println("Connected to things Speak");
+     String postStr = apiKey;
+           postStr +="&field1=5";
+           postStr += "\r\n\r\n";
+     client.print("POST /update HTTP/1.1\n"); 
+     client.print("Host: api.thingspeak.com\n"); 
+     client.print("Connection: close\n"); 
+     client.print("X-THINGSPEAKAPIKEY: "+apiKey+"\n"); 
+     client.print("Content-Type: application/x-www-form-urlencoded\n"); 
+     client.print("Content-Length: "); 
+     client.print(postStr.length()); 
+     client.print("\n\n"); 
+     client.print(postStr);
+     
+  delay(1000);                    // thingspeak needs minimum 15 sec delay between updates  
+  client.stop();                  //Stop Client
+  delay(1000);
+  }
+  
+}

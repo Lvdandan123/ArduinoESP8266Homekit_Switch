@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head> 
+		<meta charset="UTF-8"></meta>
+		<title>Homekit设备接入点设置</title>
+	</head>
+
+	<body>
+		<h2 >Homekit设备Wifi接入点设置</h2>
+		<h3 >by LIV</h3>
+        <div>
+            <form method="post" action="wifiscan">
+                <input type="submit" value="Scan for networks">
+            </form>
+        </div>
+		<div>
+			<form method="post" action="wifiset">
+				<label for="SSIDselect">Select SSID: </label>
+				<select id="SSIDselect" name="ssid" >
+					<option value="">--Please choose an WiFi--</option>
+					<option value="122">1222</option>
+					<option value="222">2444</option>
+					<option value="322">355</option>
+					<option value="422">466</option>
+					<option value="522">5</option>
+					<option value="622">6</option>
+				</select>
+				<br>
+				<label for="password">Password:</label>
+				<input type="password" id="password" name="pass">
+				<br>
+				<input type="reset" value="Reset" >&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="submit" value="Submit">
+			</form>
+		</div>
+	</body>
+</html>
+
