@@ -1,76 +1,38 @@
 d:\Users\Administrator\Desktop\Blink\build\sketch\Blink.ino.cpp.o: \
  d:\Users\Administrator\Desktop\Blink\build\sketch\Blink.ino.cpp \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/Arduino.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\libraries\ESP8266WiFi\src/ESP8266WiFi.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/stdint.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/machine/_default_types.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/sys/features.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/sys/_intsup.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\libraries\ESP8266WiFi\src/include/wl_definitions.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/IPAddress.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/WString.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/stdlib.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/machine/ieeefp.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/_ansi.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/newlib.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/sys/config.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/sys/features.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/xtensa/config/core-isa.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/sys/reent.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/_ansi.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/sys/_types.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/machine/_types.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/machine/_default_types.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/sys/lock.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/sys/cdefs.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/machine/stdlib.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/alloca.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/stdint.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/sys/_intsup.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/stdio.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/sys/types.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/machine/types.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/sys/stdio.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/sys/pgmspace.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/string.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/sys/string.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/math.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/stdlib_noniso.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/binary.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/esp8266_peri.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/include/c_types.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/esp8266_undocumented.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/twi.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/Arduino.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/core_esp8266_features.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/core_esp8266_version.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/core_version.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/ctype.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/sys/ctype.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/sys/pgmspace.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/pgmspace.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/include/ets_sys.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/include/c_types.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/include/eagle_soc.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/include/osapi.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/user_config.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/WCharacter.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/WString.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/HardwareSerial.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/inttypes.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/../include/time.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/../include/_ansi.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/machine/time.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/Stream.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/Print.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/Printable.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/uart.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/Esp.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/spi_vendors.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/../../bootloaders/eboot/spi_vendors.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/Updater.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/flash_utils.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/../../bootloaders/eboot/flash.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/include/spi_flash_geometry.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/MD5Builder.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/WString.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/Stream.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/md5.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/debug.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\variants\nodemcu/pins_arduino.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\variants\nodemcu/../generic/common.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\libraries\ESP8266WiFi\src/ESP8266WiFi.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\libraries\ESP8266WiFi\src/include/wl_definitions.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/IPAddress.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/Printable.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/lwip2/include/lwip/init.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/lwip2/include/lwip/opt.h \
@@ -93,9 +55,15 @@ d:\Users\Administrator\Desktop\Blink\build\sketch\Blink.ino.cpp.o: \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/lwip2/include/lwip/def.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/include/queue.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/include/spi_flash.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/include/spi_flash_geometry.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/include/gpio.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/lwip2/include/gluedebug.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/include/ipv4_addr.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/stdio.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/sys/types.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/machine/types.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/sys/stdio.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/inttypes.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/limits.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/lwip2/include/arch/cc.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/lwip2/include/lwip-git-hash.h \
@@ -108,6 +76,40 @@ d:\Users\Administrator\Desktop\Blink\build\sketch\Blink.ino.cpp.o: \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\libraries\ESP8266WiFi\src/ESP8266WiFiAP.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\libraries\ESP8266WiFi\src/ESP8266WiFiScan.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\libraries\ESP8266WiFi\src/WiFiClient.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/Arduino.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/math.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/stdlib_noniso.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/binary.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/esp8266_peri.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/include/c_types.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/esp8266_undocumented.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/twi.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/Arduino.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/core_esp8266_features.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/core_esp8266_version.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/core_version.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/WCharacter.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/WString.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/HardwareSerial.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/../include/time.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/../include/_ansi.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/machine/time.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/Stream.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/Print.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/Printable.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/uart.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/Esp.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/spi_vendors.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/../../bootloaders/eboot/spi_vendors.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/Updater.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/flash_utils.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/../../bootloaders/eboot/flash.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/MD5Builder.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/Stream.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/md5.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/debug.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\variants\nodemcu/pins_arduino.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\variants\nodemcu/../generic/common.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/Print.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/Client.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\cores\esp8266/IPAddress.h \
@@ -153,4 +155,33 @@ d:\Users\Administrator\Desktop\Blink\build\sketch\Blink.ino.cpp.o: \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\libraries\ESP8266WebServer\src/detail/mimetable.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\libraries\ESP8266WebServer\src/Uri.h \
  C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\libraries\ESP8266WebServer\src/Parsing-impl.h \
- C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\libraries\EEPROM/EEPROM.h
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4\libraries\EEPROM/EEPROM.h \
+ d:\Users\Administrator\Documents\Arduino\libraries\Arduino-HomeKit-ESP8266-master\src/arduino_homekit_server.h \
+ d:\Users\Administrator\Documents\Arduino\libraries\Arduino-HomeKit-ESP8266-master\src/constants.h \
+ d:\Users\Administrator\Documents\Arduino\libraries\Arduino-HomeKit-ESP8266-master\src/base64.h \
+ d:\Users\Administrator\Documents\Arduino\libraries\Arduino-HomeKit-ESP8266-master\src/crypto.h \
+ d:\Users\Administrator\Documents\Arduino\libraries\Arduino-HomeKit-ESP8266-master\src/wolfssl/wolfcrypt/ed25519.h \
+ d:\Users\Administrator\Documents\Arduino\libraries\Arduino-HomeKit-ESP8266-master\src/wolfssl/wolfcrypt/types.h \
+ d:\Users\Administrator\Documents\Arduino\libraries\Arduino-HomeKit-ESP8266-master\src/wolfssl/wolfcrypt/settings.h \
+ d:\Users\Administrator\Documents\Arduino\libraries\Arduino-HomeKit-ESP8266-master\src/wolfssl/wolfcrypt/visibility.h \
+ d:\Users\Administrator\Documents\Arduino\libraries\Arduino-HomeKit-ESP8266-master\src/user_settings.h \
+ d:\Users\Administrator\Documents\Arduino\libraries\Arduino-HomeKit-ESP8266-master\src/homekit_debug.h \
+ d:\Users\Administrator\Documents\Arduino\libraries\Arduino-HomeKit-ESP8266-master\src/esp_xpgm.h \
+ d:\Users\Administrator\Documents\Arduino\libraries\Arduino-HomeKit-ESP8266-master\src/wolfssl/wolfcrypt/wc_port.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/libc/xtensa-lx106-elf/include/time.h \
+ d:\Users\Administrator\Documents\Arduino\libraries\Arduino-HomeKit-ESP8266-master\src/wolfssl/wolfcrypt/fe_operations.h \
+ d:\Users\Administrator\Documents\Arduino\libraries\Arduino-HomeKit-ESP8266-master\src/wolfssl/wolfcrypt/ge_operations.h \
+ d:\Users\Administrator\Documents\Arduino\libraries\Arduino-HomeKit-ESP8266-master\src/wolfssl/wolfcrypt/random.h \
+ d:\Users\Administrator\Documents\Arduino\libraries\Arduino-HomeKit-ESP8266-master\src/wolfssl/wolfcrypt/sha512.h \
+ d:\Users\Administrator\Documents\Arduino\libraries\Arduino-HomeKit-ESP8266-master\src/wolfssl/wolfcrypt/curve25519.h \
+ d:\Users\Administrator\Documents\Arduino\libraries\Arduino-HomeKit-ESP8266-master\src/pairing.h \
+ d:\Users\Administrator\Documents\Arduino\libraries\Arduino-HomeKit-ESP8266-master\src/storage.h \
+ d:\Users\Administrator\Documents\Arduino\libraries\Arduino-HomeKit-ESP8266-master\src/query_params.h \
+ d:\Users\Administrator\Documents\Arduino\libraries\Arduino-HomeKit-ESP8266-master\src/json.h \
+ d:\Users\Administrator\Documents\Arduino\libraries\Arduino-HomeKit-ESP8266-master\src/port.h \
+ C:\Users\Administrator\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4/tools/sdk/include/spi_flash.h \
+ d:\Users\Administrator\Documents\Arduino\libraries\Arduino-HomeKit-ESP8266-master\src/cQueue.h \
+ d:\Users\Administrator\Documents\Arduino\libraries\Arduino-HomeKit-ESP8266-master\src/homekit/homekit.h \
+ d:\Users\Administrator\Documents\Arduino\libraries\Arduino-HomeKit-ESP8266-master\src/homekit/types.h \
+ d:\Users\Administrator\Documents\Arduino\libraries\Arduino-HomeKit-ESP8266-master\src/homekit/tlv.h \
+ d:\Users\Administrator\Documents\Arduino\libraries\Arduino-HomeKit-ESP8266-master\src/http_parser.h

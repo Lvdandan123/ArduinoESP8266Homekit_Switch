@@ -2,6 +2,8 @@
 # 2 "d:\\Users\\Administrator\\Desktop\\Blink\\Blink.ino" 2
 # 3 "d:\\Users\\Administrator\\Desktop\\Blink\\Blink.ino" 2
 # 4 "d:\\Users\\Administrator\\Desktop\\Blink\\Blink.ino" 2
+# 5 "d:\\Users\\Administrator\\Desktop\\Blink\\Blink.ino" 2
+# 6 "d:\\Users\\Administrator\\Desktop\\Blink\\Blink.ino" 2
 
 /* Put your SSID & Password */
 const char* ssid = "NodeMCU"; // Enter SSID here
@@ -12,21 +14,18 @@ IPAddress local_ip(192,168,1,1);
 IPAddress gateway(192,168,1,1);
 IPAddress subnet(255,255,255,0);
 
+/* use 80 port */
 ESP8266WebServer server(80);
-
-uint8_t LED1pin = D7;
-bool LED1status = 0x0;
-
-uint8_t LED2pin = D6;
-bool LED2status = 0x0;
 
 String Essid = ""; //EEPROM Network SSID
 String Epass = ""; //EEPROM Network Password
 
 bool ConnectRouterOK = false;
 
+
+
 /**
- * initialize function
+ * 初始化时设置功能
  */
 void setup()
 {
@@ -34,9 +33,6 @@ void setup()
   Serial.println();
 
   EEPROM.begin(512);
-
-  pinMode(LED1pin, 0x01);
-  pinMode(LED2pin, 0x01);
 
   /* Reading EEProm SSID-Password */
   for (int i = 0; i < 32; ++i) //Reading SSID
@@ -59,21 +55,22 @@ void setup()
     WiFi.begin(Essid.c_str(), Epass.c_str()); //c_str()
     WiFi.setAutoConnect(true); //设置是否自动连接到最近接入点
     WiFi.setAutoReconnect(true); //设置是否自动重新连接到最近接入点
-
-    while (WiFi.status() != WL_CONNECTED)
+    Serial.println("WiFi connecting...");
+    while (!WiFi.isConnected())
     {
-      delay(1000);
+      delay(500);
       Serial.print(".");
       if (++cnt > 10) break;
     }
 
     if (cnt > 10)
     {
-      Serial.print("\r\nSTA mode connect WiFi failed!\r\n");
+      Serial.print("\r\nUse STA mode to connect WiFi failed!\r\n");
     }
     else
     {
       ConnectRouterOK = true;
+      Serial.printf("WiFi connected, IP: %s\n", WiFi.localIP().toString().c_str());
     }
   }
 
@@ -93,103 +90,79 @@ void setup()
   }
 
   /* //设置server 的url请求回调处理 */
-  // server.on("/led1on", handle_led1on);
-  // server.on("/led1off", handle_led1off);
-  // server.on("/led2on", handle_led2on);
-  // server.on("/led2off", handle_led2off);
   server.on("/", handle_OnConnect);
   server.on("/wifiscan", handle_wifiscan);
   server.on("/wifiset", handle_wifiset);
+  server.on("/rmpair", handle_removepair);
   server.onNotFound(handle_NotFound);
 
+  /* 启动sever */
   server.begin();
   Serial.println("HTTP server started");
+
+  /* 配置homekit */
+  //homekit_storage_reset(); // to remove the previous HomeKit pairing storage when you first run this new HomeKit example
+ my_homekit_setup();
 }
 
 /**
- * infinty loop
+ * 循环处理
  */
 void loop()
 {
   //循环处理网络服务
   server.handleClient();
 
-  if(LED1status)
-  {
-    digitalWrite(LED1pin, 0x1);
-  }
-  else
-  {
-    digitalWrite(LED1pin, 0x0);
-  }
-
-  if(LED2status)
-  {
-    digitalWrite(LED2pin, 0x1);
-  }
-  else
-  {
-    digitalWrite(LED2pin, 0x0);
-  }
+  //homekit
+  my_homekit_loop();
+ delay(10);
 }
+
 
 /**
- * 设备连接到esp8266
+ * @brief  网页端404
+ * @param  none
+ * @return none
  */
-// void handle_OnConnect() {
-//   LED1status = LOW;
-//   LED2status = LOW;
-//   Serial.println("GPIO7 Status: OFF | GPIO6 Status: OFF");
-//   server.send(200, "text/html",scan_wifi(false)); 
-// }
-void handle_led1on() {
-  LED1status = 0x1;
-  Serial.println("GPIO7 Status: ON");
-  server.send(200, "text/html", SendHTML(true,LED2status));
-}
-void handle_led1off() {
-  LED1status = 0x0;
-  Serial.println("GPIO7 Status: OFF");
-  server.send(200, "text/html", SendHTML(false,LED2status));
-}
-void handle_led2on() {
-  LED2status = 0x1;
-  Serial.println("GPIO6 Status: ON");
-  server.send(200, "text/html", SendHTML(LED1status,true));
-}
-void handle_led2off() {
-  LED2status = 0x0;
-  Serial.println("GPIO6 Status: OFF");
-  server.send(200, "text/html", SendHTML(LED1status,false));
-}
-
-
-void handle_NotFound(){
+void handle_NotFound()
+{
   server.send(404, "text/plain", "404: Not found");
   Serial.print(WiFi.localIP());
   Serial.println(server.uri()); //串口输出当前客户端的请求路径
-
-  // Serial.print("Client requset method :"); 
-  // Serial.println(server.method());  //串口输出当前客户端的请求方
 }
 
-void handle_OnConnect() {
+/**
+ * @brief  网页端初始连接时执行的callback
+ * @param  none
+ * @return none
+ */
+void handle_OnConnect()
+{
   Serial.println("Client connect...");
   server.send(200, "text/html",scan_wifi(false));
 }
 
+/**
+ * @brief  网页端点击“scanwifi”按钮后执行的callback
+ * @param  none
+ * @return none
+ */
 void handle_wifiscan(void)
 {
   server.send(200, "text/html",scan_wifi(true));
 }
 
-void ClearEeprom()
+
+void ClearEeprom(void)
 {
-        Serial.println("Clearing EEprom");
-        for (int i = 0; i < 96; ++i) { EEPROM.write(i, 0); }
+  Serial.println("Clearing EEprom");
+  for (int i = 0; i < 96; ++i) { EEPROM.write(i, 0); }
 }
+
 /**
- * 客户端设置路由器wifi后进行接入
+ * @brief  网页端点击“submit”按钮后执行的callback
+ * @param  none
+ * @return none
  */
 void handle_wifiset(void)
 {
@@ -259,44 +232,10 @@ void handle_wifiset(void)
 }
 
 
-String SendHTML(uint8_t led1stat,uint8_t led2stat)
-{
-  String ptr = "<!DOCTYPE html> <html>\n";
-  ptr +="<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\">\n";
-  ptr +="<title>LED Control</title>\n";
-  ptr +="<style>html { font-family: Helvetica; display: inline-block; margin: 0px auto; text-align: center;}\n";
-  ptr +="body{margin-top: 50px;} h1 {color: #444444;margin: 50px auto 30px;} h3 {color: #444444;margin-bottom: 50px;}\n";
-  ptr +=".button {display: block;width: 80px;background-color: #1abc9c;border: none;color: white;padding: 13px 30px;text-decoration: none;font-size: 25px;margin: 0px auto 35px;cursor: pointer;border-radius: 4px;}\n";
-  ptr +=".button-on {background-color: #1abc9c;}\n";
-  ptr +=".button-on:active {background-color: #16a085;}\n";
-  ptr +=".button-off {background-color: #34495e;}\n";
-  ptr +=".button-off:active {background-color: #2c3e50;}\n";
-  ptr +="p {font-size: 14px;color: #888;margin-bottom: 10px;}\n";
-  ptr +="</style>\n";
-  ptr +="</head>\n";
-  ptr +="<body>\n";
-  ptr +="<h1>ESP8266 Web Server</h1>\n";
-  ptr +="<h3>Using Access Point(AP) Mode</h3>\n";
-
-  if(led1stat)
-    {ptr +="<p>LED1 Status: ON</p><a class=\"button button-off\" href=\"/led1off\">OFF</a>\n";}
-  else
-    {ptr +="<p>LED1 Status: OFF</p><a class=\"button button-on\" href=\"/led1on\">ON</a>\n";}
-
-  if(led2stat)
-    {ptr +="<p>LED2 Status: ON</p><a class=\"button button-off\" href=\"/led2off\">OFF</a>\n";}
-  else
-    {ptr +="<p>LED2 Status: OFF</p><a class=\"button button-on\" href=\"/led2on\">ON</a>\n";}
-
-  ptr +="</body>\n";
-  ptr +="</html>\n";
-
-  return ptr;
-}
-
-
 /**
- * 扫描可用的wif并在串口和网页端分别显示
+ * @brief  扫描可用的wifi并在串口和网页端分别显示
+ * @param  scanflag-true:刷新网页前扫描wifi；false：直接刷新网页，不扫描wifi以提高速度
+ * @return 以字符串形式返回网页html内容
  */
 String scan_wifi(bool scanflag)
 {
@@ -331,8 +270,9 @@ String scan_wifi(bool scanflag)
     ps += "</option>\n";
   }
  ps += "</select><br><label for=\"password\">Password:</label><input type=\"password\" id=\"password\" name=\"pass\"><br>\n";
- ps += "<input type=\"reset\" value=\"Reset\" >&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"submit\" value=\"Submit\">\n";
+ ps += "<input type=\"reset\" value=\"Reset\" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"submit\" value=\"Submit\">\n";
   ps += "</form></div>\n";
+  ps += "<div><form method='post' action='rmpair'><br><input type='submit' value='RemoveHomekitPairing'></form></div>";
   ps += "</body>\n";
   ps += "</html>\n";
 
@@ -348,4 +288,66 @@ String scan_wifi(bool scanflag)
   }
 
   return ps;
+}
+void handle_removepair(void)
+{
+  // to remove the previous HomeKit pairing storage when you first run this new HomeKit example
+  printf_P((__extension__({static const char __c[] __attribute__((__aligned__(4))) __attribute__((section( "\".irom0.pstr." "Blink.ino" "." "294" "." "100" "\", \"aSM\", @progbits, 1 #"))) = ("Remove the previous HomeKit pairing storage\n" "\n"); &__c[0];})));;
+  homekit_storage_reset();
+  server.send(200, "text/html", "Remove HomeKit pairing OK!");
+}
+# 336 "d:\\Users\\Administrator\\Desktop\\Blink\\Blink.ino"
+//==============================
+// HomeKit setup and loop
+//==============================
+// access your HomeKit characteristics defined in my_accessory.c
+extern "C" homekit_server_config_t config;
+extern "C" homekit_characteristic_t cha_switch_on;
+
+
+
+
+//Called when the switch value is changed by iOS Home APP
+void cha_switch_on_setter(const homekit_value_t value) {
+ bool on = value.bool_value;
+ cha_switch_on.value.bool_value = on; //sync the value
+ printf_P((__extension__({static const char __c[] __attribute__((__aligned__(4))) __attribute__((section( "\".irom0.pstr." "Blink.ino" "." "350" "." "101" "\", \"aSM\", @progbits, 1 #"))) = ("Switch: %s" "\n"); &__c[0];})) , on ? "ON" : "OFF");;
+ digitalWrite(D7, on ? 0x0 : 0x1);
+}
+
+void my_homekit_setup() {
+ pinMode(D7, 0x01);
+ digitalWrite(D7, 0x1);
+
+ //Add the .setter function to get the switch-event sent from iOS Home APP.
+ //The .setter should be added before arduino_homekit_setup.
+ //HomeKit sever uses the .setter_ex internally, see homekit_accessories_init function.
+ //Maybe this is a legacy design issue in the original esp-homekit library,
+ //and I have no reason to modify this "feature".
+ cha_switch_on.setter = cha_switch_on_setter;
+ arduino_homekit_setup(&config);
+
+ //report the switch value to HomeKit if it is changed (e.g. by a physical button)
+ //bool switch_is_on = true/false;
+ //cha_switch_on.value.bool_value = switch_is_on;
+ //homekit_characteristic_notify(&cha_switch_on, cha_switch_on.value);
+}
+
+void my_homekit_loop()
+{
+  static uint32_t next_heap_millis = 0;
+ uint32_t t;
+
+ arduino_homekit_loop();
+  t = millis();
+
+ if (t > next_heap_millis) {
+  // show heap info every 5 seconds
+  next_heap_millis = t + 5 * 1000;
+  printf_P((__extension__({static const char __c[] __attribute__((__aligned__(4))) __attribute__((section( "\".irom0.pstr."
+ "Blink.ino"
+# 383 "d:\\Users\\Administrator\\Desktop\\Blink\\Blink.ino"
+  "." "384" "." "102" "\", \"aSM\", @progbits, 1 #"))) = ("Free heap: %d, HomeKit clients: %d" "\n"); &__c[0];})) , ESP.getFreeHeap(), arduino_homekit_connected_clients_count());
+                                                                 ;
+ }
 }

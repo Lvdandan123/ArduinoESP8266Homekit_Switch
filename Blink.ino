@@ -1,6 +1,8 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include <EEPROM.h>
+#include <Arduino.h>
+#include <arduino_homekit_server.h>
 
 /* Put your SSID & Password */
 const char* ssid = "NodeMCU";  // Enter SSID here
@@ -11,21 +13,18 @@ IPAddress local_ip(192,168,1,1);
 IPAddress gateway(192,168,1,1);
 IPAddress subnet(255,255,255,0);
 
+/* use 80 port */
 ESP8266WebServer server(80);
-
-uint8_t LED1pin = D7;
-bool LED1status = LOW;
-
-uint8_t LED2pin = D6;
-bool LED2status = LOW;
 
 String Essid = "";                  //EEPROM Network SSID
 String Epass = "";                 //EEPROM Network Password
 
 bool ConnectRouterOK = false;
 
+#define LOG_D(fmt, ...)   printf_P(PSTR(fmt "\n") , ##__VA_ARGS__);
+
 /**
- * initialize function
+ * 初始化时设置功能
  */
 void setup() 
 {
@@ -33,9 +32,6 @@ void setup()
   Serial.println();
 
   EEPROM.begin(512);
-
-  pinMode(LED1pin, OUTPUT);
-  pinMode(LED2pin, OUTPUT);
 
   /* Reading EEProm SSID-Password */
   for (int i = 0; i < 32; ++i)  //Reading SSID
@@ -52,27 +48,28 @@ void setup()
   {
     uint8_t cnt = 0;
 
-    Serial.println(String("EEprom ssid: ") + Essid.c_str());                            //Print SSID
-    Serial.println(String("EEprom pass: ") + Epass.c_str());                            //Print Password
+    Serial.println(String("EEprom ssid: ") + Essid.c_str());     //Print SSID
+    Serial.println(String("EEprom pass: ") + Epass.c_str());     //Print Password
     WiFi.mode(WIFI_STA);
     WiFi.begin(Essid.c_str(), Epass.c_str());         //c_str()
     WiFi.setAutoConnect(true);  //设置是否自动连接到最近接入点
     WiFi.setAutoReconnect(true);  //设置是否自动重新连接到最近接入点
-
-    while (WiFi.status() != WL_CONNECTED) 
+    Serial.println("WiFi connecting...");
+    while (!WiFi.isConnected()) 
     {
-      delay(1000);
+      delay(500);
       Serial.print(".");
       if (++cnt > 10) break;
     }
 
     if (cnt > 10)
     {
-      Serial.print("\r\nSTA mode connect WiFi failed!\r\n");
+      Serial.print("\r\nUse STA mode to connect WiFi failed!\r\n");
     }
     else
     {
       ConnectRouterOK = true;
+      Serial.printf("WiFi connected, IP: %s\n", WiFi.localIP().toString().c_str());
     }
   }
 
@@ -92,103 +89,79 @@ void setup()
   }
   
   /* //设置server 的url请求回调处理 */
-  // server.on("/led1on", handle_led1on);
-  // server.on("/led1off", handle_led1off);
-  // server.on("/led2on", handle_led2on);
-  // server.on("/led2off", handle_led2off);
   server.on("/", handle_OnConnect);
   server.on("/wifiscan", handle_wifiscan);
   server.on("/wifiset", handle_wifiset);
+  server.on("/rmpair", handle_removepair);
   server.onNotFound(handle_NotFound);
-  
+
+  /* 启动sever */
   server.begin();
   Serial.println("HTTP server started");
+
+  /* 配置homekit */
+  //homekit_storage_reset(); // to remove the previous HomeKit pairing storage when you first run this new HomeKit example
+	my_homekit_setup();
 }
 
 /**
- * infinty loop
+ * 循环处理
  */
 void loop() 
 {
   //循环处理网络服务
   server.handleClient();
 
-  if(LED1status)
-  {
-    digitalWrite(LED1pin, HIGH);
-  }
-  else
-  {
-    digitalWrite(LED1pin, LOW);
-  }
-  
-  if(LED2status)
-  {
-    digitalWrite(LED2pin, HIGH);
-  }
-  else
-  {
-    digitalWrite(LED2pin, LOW);
-  }
+  //homekit
+  my_homekit_loop();
+	delay(10);
 }
+
 
 /**
- * 设备连接到esp8266
+ * @brief  网页端404
+ * @param  none
+ * @return none
  */
-// void handle_OnConnect() {
-//   LED1status = LOW;
-//   LED2status = LOW;
-//   Serial.println("GPIO7 Status: OFF | GPIO6 Status: OFF");
-//   server.send(200, "text/html",scan_wifi(false)); 
-// }
-void handle_led1on() {
-  LED1status = HIGH;
-  Serial.println("GPIO7 Status: ON");
-  server.send(200, "text/html", SendHTML(true,LED2status)); 
-}
-void handle_led1off() {
-  LED1status = LOW;
-  Serial.println("GPIO7 Status: OFF");
-  server.send(200, "text/html", SendHTML(false,LED2status)); 
-}
-void handle_led2on() {
-  LED2status = HIGH;
-  Serial.println("GPIO6 Status: ON");
-  server.send(200, "text/html", SendHTML(LED1status,true)); 
-}
-void handle_led2off() {
-  LED2status = LOW;
-  Serial.println("GPIO6 Status: OFF");
-  server.send(200, "text/html", SendHTML(LED1status,false)); 
-}
-
-
-void handle_NotFound(){
+void handle_NotFound()
+{
   server.send(404, "text/plain", "404: Not found");
   Serial.print(WiFi.localIP()); 
   Serial.println(server.uri());  //串口输出当前客户端的请求路径
-  
-  // Serial.print("Client requset method :"); 
-  // Serial.println(server.method());  //串口输出当前客户端的请求方
 }
 
-void handle_OnConnect() {
+/**
+ * @brief  网页端初始连接时执行的callback
+ * @param  none
+ * @return none
+ */
+void handle_OnConnect() 
+{
   Serial.println("Client connect...");
   server.send(200, "text/html",scan_wifi(false)); 
 }
 
+/**
+ * @brief  网页端点击“scanwifi”按钮后执行的callback
+ * @param  none
+ * @return none
+ */
 void handle_wifiscan(void)
 {
   server.send(200, "text/html",scan_wifi(true));
 }
 
-void ClearEeprom()
+
+void ClearEeprom(void)
 {
-        Serial.println("Clearing EEprom");
-        for (int i = 0; i < 96; ++i) { EEPROM.write(i, 0); }
+  Serial.println("Clearing EEprom");
+  for (int i = 0; i < 96; ++i) { EEPROM.write(i, 0); }
 }
+
 /**
- * 客户端设置路由器wifi后进行接入
+ * @brief  网页端点击“submit”按钮后执行的callback
+ * @param  none
+ * @return none
  */
 void handle_wifiset(void)
 {
@@ -257,7 +230,73 @@ void handle_wifiset(void)
   }
 }
 
-#if 1
+
+/**
+ * @brief  扫描可用的wifi并在串口和网页端分别显示
+ * @param  scanflag-true:刷新网页前扫描wifi；false：直接刷新网页，不扫描wifi以提高速度
+ * @return 以字符串形式返回网页html内容
+ */
+String scan_wifi(bool scanflag)
+{
+  int num = 0;
+
+	if (scanflag == true)
+  {
+    Serial.printf("Scan WiFi access point, please wait......\r\n");
+    num= WiFi.scanNetworks();
+    Serial.printf("Scan done!\r\n");
+  }
+
+  //网页端刷新
+  String ps = "<!DOCTYPE html> <html><head><meta charset=\"UTF-8\"></meta><title>Homekit设备接入点设置</title></head>\n";
+	ps += "<body><h2 >Homekit设备Wifi接入点设置</h2><h3 >by LIV</h3><div>\n";
+  ps += "<form method=\"post\" action=\"wifiscan\"><input type=\"submit\" value=\"Scan for networks\">\n";
+  ps += "</form></div><div>\n";
+	ps += "<form method=\"post\" action=\"wifiset\">\n";
+	ps += "<label for=\"SSIDselect\">Select SSID: </label><select id=\"SSIDselect\" name=\"ssid\"><option value="">--Please choose an WiFi--</option>\n";
+  for (int i = 0; i < num; i++)
+  {
+    ps += "<option value=";
+    ps += WiFi.SSID(i);
+    ps += ">";
+    ps += ": ";
+    ps += i+1;
+    ps += WiFi.SSID(i);
+    ps += " (";
+    ps += WiFi.RSSI(i);
+    ps += "dBm)";
+    ps += (WiFi.encryptionType(i) == ENC_TYPE_NONE)?" ":"*";
+    ps += "</option>\n";
+  }
+	ps += "</select><br><label for=\"password\">Password:</label><input type=\"password\" id=\"password\" name=\"pass\"><br>\n";
+	ps += "<input type=\"reset\" value=\"Reset\" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"submit\" value=\"Submit\">\n";
+  ps += "</form></div>\n";
+  ps += "<div><form method='post' action='rmpair'><br><input type='submit' value='RemoveHomekitPairing'></form></div>";
+  ps += "</body>\n";
+  ps += "</html>\n";
+
+  //串口端刷新
+  for (int i = 0; i < num; i++)
+  {
+    Serial.printf("%d: %s, Ch:%d (%ddBm) %s\n", 
+                  i+1, 
+                  WiFi.SSID(i).c_str(), 
+                  WiFi.channel(i), 
+                  WiFi.RSSI(i), 
+                  WiFi.encryptionType(i) == ENC_TYPE_NONE ? "open" : "encryp");
+  }
+
+  return ps;
+}
+void handle_removepair(void)
+{
+  // to remove the previous HomeKit pairing storage when you first run this new HomeKit example
+  LOG_D("Remove the previous HomeKit pairing storage\n");
+  homekit_storage_reset();
+  server.send(200, "text/html", "Remove HomeKit pairing OK!");
+}
+
+#if 0
 String SendHTML(uint8_t led1stat,uint8_t led2stat)
 {
   String ptr = "<!DOCTYPE html> <html>\n";
@@ -294,57 +333,57 @@ String SendHTML(uint8_t led1stat,uint8_t led2stat)
 }
 #endif
 
-/**
- * 扫描可用的wif并在串口和网页端分别显示
- */
-String scan_wifi(bool scanflag)
-{
-  int num = 0;
+//==============================
+// HomeKit setup and loop
+//==============================
+// access your HomeKit characteristics defined in my_accessory.c
+extern "C" homekit_server_config_t config;
+extern "C" homekit_characteristic_t cha_switch_on;
 
-	if (scanflag == true)
-  {
-    Serial.printf("Scan WiFi access point, please wait......\r\n");
-    num= WiFi.scanNetworks();
-    Serial.printf("Scan done!\r\n");
-  }
+#define PIN_SWITCH 	D7
 
-  //网页端刷新
-  String ps = "<!DOCTYPE html> <html><head><meta charset=\"UTF-8\"></meta><title>Homekit设备接入点设置</title></head>\n";
-	ps += "<body><h2 >Homekit设备Wifi接入点设置</h2><h3 >by LIV</h3><div>\n";
-  ps += "<form method=\"post\" action=\"wifiscan\"><input type=\"submit\" value=\"Scan for networks\">\n";
-  ps += "</form></div><div>\n";
-	ps += "<form method=\"post\" action=\"wifiset\">\n";
-	ps += "<label for=\"SSIDselect\">Select SSID: </label><select id=\"SSIDselect\" name=\"ssid\"><option value="">--Please choose an WiFi--</option>\n";
-  for (int i = 0; i < num; i++)
-  {
-    ps += "<option value=";
-    ps += WiFi.SSID(i);
-    ps += ">";
-    ps += ": ";
-    ps += i+1;
-    ps += WiFi.SSID(i);
-    ps += " (";
-    ps += WiFi.RSSI(i);
-    ps += "dBm)";
-    ps += (WiFi.encryptionType(i) == ENC_TYPE_NONE)?" ":"*";
-    ps += "</option>\n";
-  }
-	ps += "</select><br><label for=\"password\">Password:</label><input type=\"password\" id=\"password\" name=\"pass\"><br>\n";
-	ps += "<input type=\"reset\" value=\"Reset\" >&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"submit\" value=\"Submit\">\n";
-  ps += "</form></div>\n";
-  ps += "</body>\n";
-  ps += "</html>\n";
 
-  //串口端刷新
-  for (int i = 0; i < num; i++)
-  {
-    Serial.printf("%d: %s, Ch:%d (%ddBm) %s\n", 
-                  i+1, 
-                  WiFi.SSID(i).c_str(), 
-                  WiFi.channel(i), 
-                  WiFi.RSSI(i), 
-                  WiFi.encryptionType(i) == ENC_TYPE_NONE ? "open" : "encryp");
-  }
-
-  return ps;
+//Called when the switch value is changed by iOS Home APP
+void cha_switch_on_setter(const homekit_value_t value) {
+	bool on = value.bool_value;
+	cha_switch_on.value.bool_value = on;	//sync the value
+	LOG_D("Switch: %s", on ? "ON" : "OFF");
+	digitalWrite(PIN_SWITCH, on ? LOW : HIGH);
 }
+
+void my_homekit_setup() {
+	pinMode(PIN_SWITCH, OUTPUT);
+	digitalWrite(PIN_SWITCH, HIGH);
+
+	//Add the .setter function to get the switch-event sent from iOS Home APP.
+	//The .setter should be added before arduino_homekit_setup.
+	//HomeKit sever uses the .setter_ex internally, see homekit_accessories_init function.
+	//Maybe this is a legacy design issue in the original esp-homekit library,
+	//and I have no reason to modify this "feature".
+	cha_switch_on.setter = cha_switch_on_setter;
+	arduino_homekit_setup(&config);
+
+	//report the switch value to HomeKit if it is changed (e.g. by a physical button)
+	//bool switch_is_on = true/false;
+	//cha_switch_on.value.bool_value = switch_is_on;
+	//homekit_characteristic_notify(&cha_switch_on, cha_switch_on.value);
+}
+
+void my_homekit_loop() 
+{
+  static uint32_t next_heap_millis = 0;
+	uint32_t t;
+
+	arduino_homekit_loop();
+  t = millis();
+  
+	if (t > next_heap_millis) {
+		// show heap info every 5 seconds
+		next_heap_millis = t + 5 * 1000;
+		LOG_D("Free heap: %d, HomeKit clients: %d",
+				ESP.getFreeHeap(), arduino_homekit_connected_clients_count());
+	}
+}
+
+
+
