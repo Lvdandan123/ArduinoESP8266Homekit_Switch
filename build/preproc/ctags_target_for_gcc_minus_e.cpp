@@ -24,6 +24,7 @@ bool ConnectRouterOK = false;
 
 
 
+
 /**
  * 初始化时设置功能
  */
@@ -32,16 +33,16 @@ void setup()
   Serial.begin(115200);
   Serial.println();
 
-  EEPROM.begin(512);
+  EEPROM.begin(4096);
 
   /* Reading EEProm SSID-Password */
   for (int i = 0; i < 32; ++i) //Reading SSID
   {
-    Essid += char(EEPROM.read(i));
+    Essid += char(EEPROM.read(i+1440 /*前1440KB给HomeKit库存储参数使用*/));
   }
   for (int i = 32; i < 96; ++i) //Reading Password
   {
-    Epass += char(EEPROM.read(i));
+    Epass += char(EEPROM.read(i+1440 /*前1440KB给HomeKit库存储参数使用*/));
   }
 
   ConnectRouterOK = false;
@@ -85,7 +86,7 @@ void setup()
     delay(100);
 
     Serial.println("Set to AP+STA mode to manual connect router\r\n");
-    Serial.printf("Please search wifi name: %s, password: %s\r\n", ssid, password);
+    Serial.printf("Please search wifi name: %s, password: %s and access blow ip to set!\r\n", ssid, password);
     Serial.println("local ip: 192.168.1.1\r\n");
   }
 
@@ -156,7 +157,11 @@ void handle_wifiscan(void)
 void ClearEeprom(void)
 {
   Serial.println("Clearing EEprom");
-  for (int i = 0; i < 96; ++i) { EEPROM.write(i, 0); }
+  for (int i = 0; i < 96; ++i)
+  {
+    EEPROM.write(i+1440 /*前1440KB给HomeKit库存储参数使用*/, 0);
+  }
+  EEPROM.commit();
 }
 
 /**
@@ -194,11 +199,11 @@ void handle_wifiset(void)
         delay(10);
         for (int i = 0; i < sssid.length(); ++i)
         {
-          EEPROM.write(i, sssid[i]);
+          EEPROM.write(i+1440 /*前1440KB给HomeKit库存储参数使用*/, sssid[i]);
         }
         for (int i = 0; i < passs.length(); ++i)
         {
-          EEPROM.write(32+i, passs[i]);
+          EEPROM.write(32+i+1440 /*前1440KB给HomeKit库存储参数使用*/, passs[i]);
         }
         EEPROM.commit();
         Serial.println("Save ssid & pass to eeprom OK!");
@@ -260,8 +265,8 @@ String scan_wifi(bool scanflag)
     ps += "<option value=";
     ps += WiFi.SSID(i);
     ps += ">";
-    ps += ": ";
     ps += i+1;
+    ps += ": ";
     ps += WiFi.SSID(i);
     ps += " (";
     ps += WiFi.RSSI(i);
@@ -292,17 +297,19 @@ String scan_wifi(bool scanflag)
 void handle_removepair(void)
 {
   // to remove the previous HomeKit pairing storage when you first run this new HomeKit example
-  printf_P((__extension__({static const char __c[] __attribute__((__aligned__(4))) __attribute__((section( "\".irom0.pstr." "Blink.ino" "." "294" "." "100" "\", \"aSM\", @progbits, 1 #"))) = ("Remove the previous HomeKit pairing storage\n" "\n"); &__c[0];})));;
+  printf_P((__extension__({static const char __c[] __attribute__((__aligned__(4))) __attribute__((section( "\".irom0.pstr." "Blink.ino" "." "299" "." "100" "\", \"aSM\", @progbits, 1 #"))) = ("Remove the previous HomeKit pairing storage\n" "\n"); &__c[0];})));;
   homekit_storage_reset();
   server.send(200, "text/html", "Remove HomeKit pairing OK!");
 }
-# 336 "d:\\Users\\Administrator\\Desktop\\Blink\\Blink.ino"
+# 341 "d:\\Users\\Administrator\\Desktop\\Blink\\Blink.ino"
 //==============================
 // HomeKit setup and loop
 //==============================
 // access your HomeKit characteristics defined in my_accessory.c
 extern "C" homekit_server_config_t config;
 extern "C" homekit_characteristic_t cha_switch_on;
+
+/* D7开关量输出 */
 
 
 
@@ -311,13 +318,14 @@ extern "C" homekit_characteristic_t cha_switch_on;
 void cha_switch_on_setter(const homekit_value_t value) {
  bool on = value.bool_value;
  cha_switch_on.value.bool_value = on; //sync the value
- printf_P((__extension__({static const char __c[] __attribute__((__aligned__(4))) __attribute__((section( "\".irom0.pstr." "Blink.ino" "." "350" "." "101" "\", \"aSM\", @progbits, 1 #"))) = ("Switch: %s" "\n"); &__c[0];})) , on ? "ON" : "OFF");;
+ printf_P((__extension__({static const char __c[] __attribute__((__aligned__(4))) __attribute__((section( "\".irom0.pstr." "Blink.ino" "." "357" "." "101" "\", \"aSM\", @progbits, 1 #"))) = ("Switch: %s" "\n"); &__c[0];})) , on ? "ON" : "OFF");;
  digitalWrite(D7, on ? 0x0 : 0x1);
 }
 
 void my_homekit_setup() {
+  //初始化IO输出引脚
  pinMode(D7, 0x01);
- digitalWrite(D7, 0x1);
+ digitalWrite(D7, 0x0);
 
  //Add the .setter function to get the switch-event sent from iOS Home APP.
  //The .setter should be added before arduino_homekit_setup.
@@ -346,8 +354,8 @@ void my_homekit_loop()
   next_heap_millis = t + 5 * 1000;
   printf_P((__extension__({static const char __c[] __attribute__((__aligned__(4))) __attribute__((section( "\".irom0.pstr."
  "Blink.ino"
-# 383 "d:\\Users\\Administrator\\Desktop\\Blink\\Blink.ino"
-  "." "384" "." "102" "\", \"aSM\", @progbits, 1 #"))) = ("Free heap: %d, HomeKit clients: %d" "\n"); &__c[0];})) , ESP.getFreeHeap(), arduino_homekit_connected_clients_count());
+# 391 "d:\\Users\\Administrator\\Desktop\\Blink\\Blink.ino"
+  "." "392" "." "102" "\", \"aSM\", @progbits, 1 #"))) = ("Free heap: %d, HomeKit clients: %d" "\n"); &__c[0];})) , ESP.getFreeHeap(), arduino_homekit_connected_clients_count());
                                                                  ;
  }
 }

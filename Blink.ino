@@ -22,6 +22,7 @@ String Epass = "";                 //EEPROM Network Password
 bool ConnectRouterOK = false;
 
 #define LOG_D(fmt, ...)   printf_P(PSTR(fmt "\n") , ##__VA_ARGS__);
+#define WIFI_PARAMETER_ADDR       1440      //前1440KB给HomeKit库存储参数使用
 
 /**
  * 初始化时设置功能
@@ -31,16 +32,16 @@ void setup()
   Serial.begin(115200);
   Serial.println();
 
-  EEPROM.begin(512);
+  EEPROM.begin(4096);
 
   /* Reading EEProm SSID-Password */
   for (int i = 0; i < 32; ++i)  //Reading SSID
   {
-    Essid += char(EEPROM.read(i)); 
+    Essid += char(EEPROM.read(i+WIFI_PARAMETER_ADDR)); 
   }
   for (int i = 32; i < 96; ++i)  //Reading Password
   {
-    Epass += char(EEPROM.read(i)); 
+    Epass += char(EEPROM.read(i+WIFI_PARAMETER_ADDR)); 
   }
 
   ConnectRouterOK = false;
@@ -84,7 +85,7 @@ void setup()
     delay(100);
 
     Serial.println("Set to AP+STA mode to manual connect router\r\n");
-    Serial.printf("Please search wifi name: %s, password: %s\r\n", ssid, password);
+    Serial.printf("Please search wifi name: %s, password: %s and access blow ip to set!\r\n", ssid, password);
     Serial.println("local ip: 192.168.1.1\r\n");
   }
   
@@ -155,7 +156,11 @@ void handle_wifiscan(void)
 void ClearEeprom(void)
 {
   Serial.println("Clearing EEprom");
-  for (int i = 0; i < 96; ++i) { EEPROM.write(i, 0); }
+  for (int i = 0; i < 96; ++i) 
+  { 
+    EEPROM.write(i+WIFI_PARAMETER_ADDR, 0); 
+  }
+  EEPROM.commit();
 }
 
 /**
@@ -193,11 +198,11 @@ void handle_wifiset(void)
         delay(10);
         for (int i = 0; i < sssid.length(); ++i)
         {
-          EEPROM.write(i, sssid[i]);
+          EEPROM.write(i+WIFI_PARAMETER_ADDR, sssid[i]);
         }
         for (int i = 0; i < passs.length(); ++i)
         {
-          EEPROM.write(32+i, passs[i]);
+          EEPROM.write(32+i+WIFI_PARAMETER_ADDR, passs[i]);
         }    
         EEPROM.commit();
         Serial.println("Save ssid & pass to eeprom OK!");
@@ -259,8 +264,8 @@ String scan_wifi(bool scanflag)
     ps += "<option value=";
     ps += WiFi.SSID(i);
     ps += ">";
-    ps += ": ";
     ps += i+1;
+    ps += ": ";
     ps += WiFi.SSID(i);
     ps += " (";
     ps += WiFi.RSSI(i);
@@ -340,7 +345,9 @@ String SendHTML(uint8_t led1stat,uint8_t led2stat)
 extern "C" homekit_server_config_t config;
 extern "C" homekit_characteristic_t cha_switch_on;
 
-#define PIN_SWITCH 	D7
+/* D7开关量输出 */
+#define PIN_SWITCH 	         D7
+#define PIN_INIT_STATUS      LOW
 
 
 //Called when the switch value is changed by iOS Home APP
@@ -352,8 +359,9 @@ void cha_switch_on_setter(const homekit_value_t value) {
 }
 
 void my_homekit_setup() {
+  //初始化IO输出引脚
 	pinMode(PIN_SWITCH, OUTPUT);
-	digitalWrite(PIN_SWITCH, HIGH);
+	digitalWrite(PIN_SWITCH, PIN_INIT_STATUS);
 
 	//Add the .setter function to get the switch-event sent from iOS Home APP.
 	//The .setter should be added before arduino_homekit_setup.
